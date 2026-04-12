@@ -1,0 +1,11 @@
+Commande pour lancer la navigation avec une map SLAM
+ros2 launch nav2_bringup navigation_launch.py params_file:=./src/car/config/nav2_params.yaml use_sim_time:=true
+
+Commande pour lancer slam_toolbox 
+ros2 launch slam_toolbox online_async_launch.py use_sim_time:=true slam_params_file:=./src/car/config/mapper_params_online_async.yaml
+
+Bug nav2 : 
+rm -rf /dev/shm/fastrtps*
+et rebuild le container
+sudo apt install ros-jazzy-nav2-bringup
+sudo apt install ros-jazzy-slam-toolbox

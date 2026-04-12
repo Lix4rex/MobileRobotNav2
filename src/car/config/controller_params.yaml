@@ -1,4 +1,4 @@
 car_controller:
   ros__parameters:
-    controlable: true
+    controlable: false
     speed: 1.0

@@ -6,11 +6,8 @@ Panels:
       Expanded:
         - /Global Options1
         - /Status1
-        - /Grid1
-        - /RobotModel1
         - /RobotModel1/Description Topic1
-        - /LaserScan1
-        - /LaserScan1/Status1
+        - /TF1
       Splitter Ratio: 0.5
     Tree Height: 555
   - Class: rviz_common/Selection
@@ -84,7 +81,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        lb_rotation_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         lf_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lf_rotation_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -99,7 +106,17 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        rb_rotation_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         rf_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        rf_rotation_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -146,10 +163,92 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
+    - Alpha: 0.699999988079071
+      Binary representation: false
+      Binary threshold: 100
+      Class: rviz_default_plugins/Map
+      Color Scheme: map
+      Draw Behind: false
+      Enabled: true
+      Name: Map
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        Filter size: 10
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map
+      Update Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /map_updates
+      Use Timestamp: false
+      Value: true
+    - Class: rviz_default_plugins/TF
+      Enabled: true
+      Filter (blacklist): ""
+      Filter (whitelist): ""
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        base_footprint:
+          Value: true
+        base_link:
+          Value: true
+        lb_link:
+          Value: true
+        lb_rotation_link:
+          Value: true
+        lf_link:
+          Value: true
+        lf_rotation_link:
+          Value: true
+        lidar_link:
+          Value: true
+        map:
+          Value: true
+        odom:
+          Value: true
+        rb_link:
+          Value: true
+        rb_rotation_link:
+          Value: true
+        rf_link:
+          Value: true
+        rf_rotation_link:
+          Value: true
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        map:
+          odom:
+            base_footprint:
+              base_link:
+                lb_link:
+                  lb_rotation_link:
+                    {}
+                lf_link:
+                  lf_rotation_link:
+                    {}
+                lidar_link:
+                  {}
+                rb_link:
+                  rb_rotation_link:
+                    {}
+                rf_link:
+                  rf_rotation_link:
+                    {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
-    Fixed Frame: base_footprint
+    Fixed Frame: map
     Frame Rate: 30
   Name: root
   Tools:
@@ -192,25 +291,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 34.20039367675781
+      Distance: 42.22489547729492
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: -0.8745222091674805
-        Y: -0.65718674659729
-        Z: 1.4962927103042603
+        X: -5.838313579559326
+        Y: 1.7287198305130005
+        Z: 1.0288830995559692
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1153976917266846
+      Pitch: 0.9553978443145752
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.218574047088623
+      Yaw: 4.463575839996338
     Saved: ~
 Window Geometry:
   Displays:
@@ -228,5 +327,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 503
-  Y: 143
+  X: 553
+  Y: 95

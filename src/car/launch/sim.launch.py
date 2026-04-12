@@ -1,5 +1,6 @@
 import os
 
+import launch
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -28,8 +29,8 @@ def generate_launch_description():
     rvizConfigPath       = os.path.join(pkgPath, rvizConfigRelativePath)
     controllerParamsPath = os.path.join(pkgPath, controllerParamsRelativePath)
     robotControllerPath  = os.path.join(pkgPath, robotControllerRelativePath)
-    use_gui = True 
 
+    
     robot_description = ParameterValue(
         Command([
             'xacro ',
@@ -61,6 +62,22 @@ def generate_launch_description():
         }.items(),
     )
 
+
+    robot_state_publisher_node = launch_ros.actions.Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="both",
+        parameters=[{
+            "robot_description":robot_description,
+            "use_sim_time": True
+        }]
+    )
+
+    delayed_rsp = launch.actions.TimerAction(
+        period=2.0,
+        actions=[robot_state_publisher_node]
+    )
+
     return LaunchDescription([
 
         gazebo,
@@ -72,6 +89,7 @@ def generate_launch_description():
             package='ros_gz_bridge',
             executable='parameter_bridge',
             arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
+            parameters=[{'use_sim_time': True}],
             output='screen'
         ),
 
@@ -79,6 +97,7 @@ def generate_launch_description():
         Node(
             package='ros_gz_bridge',
             executable='parameter_bridge',
+            parameters=[{'use_sim_time': True}],
             arguments=[
                 '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',
             ]
@@ -100,15 +119,7 @@ def generate_launch_description():
         ),
 
         # robot_state_publisher
-        Node(
-            package='robot_state_publisher',
-            executable='robot_state_publisher',
-            parameters=[{
-                'robot_description': robot_description,
-                'use_sim_time': True
-            }],
-            output='screen'
-        ),
+        delayed_rsp,
 
         # RViz
         Node(
@@ -129,11 +140,13 @@ def generate_launch_description():
                     package="controller_manager",
                     executable="spawner",
                     arguments=["joint_state_broadcaster"],
+                    parameters=[{'use_sim_time': True}],
                 ),
                 Node(
                     package="controller_manager",
                     executable="spawner",
-                    arguments=["diff_drive_controller"],
+                    arguments=["diff_drive_controller", "--param-file", robotControllerPath],
+                    parameters=[{'use_sim_time': True}],
                 ),
             ],
         ),
@@ -141,6 +154,6 @@ def generate_launch_description():
         Node(
             package="car",
             executable="car_controller",
-            parameters = [controllerParamsPath]
+            parameters = [controllerParamsPath, {'use_sim_time': True}]
         )
     ])

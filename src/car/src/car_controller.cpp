@@ -18,6 +18,11 @@ class CarController : public rclcpp::Node {
                                 "/diff_drive_controller/cmd_vel", 10
                         );
 
+                        cmd_vel_nav2_sub = this->create_subscription<geometry_msgs::msg::Twist>(
+                                "/cmd_vel", 10, 
+                                std::bind(&CarController::cmd_vel_nav2_callback, this, std::placeholders::_1)
+                        );
+
                         this->declare_parameter<bool>("controlable");
                         controlable = this->get_parameter("controlable").as_bool();
 
@@ -35,15 +40,31 @@ class CarController : public rclcpp::Node {
                         msg.header.frame_id = "base_footprint";
 
                         msg.twist.linear.x = joy->axes[1] * speed;
-                        msg.twist.angular.z = joy->axes[3] * speed / 3;
+                        msg.twist.angular.z = joy->axes[3] * speed/3;
 
                         if (controlable) {
                                 cmd_vel_pub->publish(msg);
                         }
                 }
 
+                void cmd_vel_nav2_callback(const geometry_msgs::msg::Twist::SharedPtr msg){
+                        auto repub_msg = geometry_msgs::msg::TwistStamped();
+
+                        repub_msg.header.stamp = this->now();
+                        repub_msg.header.frame_id = "base_footprint";
+
+                        repub_msg.twist.linear.x = 2*msg->linear.x;
+                        repub_msg.twist.angular.z = 2*msg->angular.z;
+                        
+                        if (!controlable){
+                                cmd_vel_pub->publish(repub_msg);
+                        }
+
+                }
+
                 rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub;
                 rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr cmd_vel_pub;
+                rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_nav2_sub;
 
                 bool controlable;
                 double speed;
