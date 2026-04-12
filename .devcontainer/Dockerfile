@@ -33,6 +33,8 @@ RUN apt-get update \
     ros-jazzy-gz-ros2-control \
     ros-jazzy-ros2-control \
     ros-jazzy-ros2-controllers \
+    ros-jazzy-nav2-bringup \
+    ros-jazzy-slam-toolbox \
    && apt-get autoremove -y \
    && apt-get clean -y \
    && rm -rf /var/lib/apt/lists/*
