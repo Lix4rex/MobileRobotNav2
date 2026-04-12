@@ -26,8 +26,11 @@ class CarController : public rclcpp::Node {
                         this->declare_parameter<bool>("controlable");
                         controlable = this->get_parameter("controlable").as_bool();
 
-                        this->declare_parameter<double>("speed");
-                        speed = this->get_parameter("speed").as_double();
+                        this->declare_parameter<double>("joy_speed");
+                        joy_speed = this->get_parameter("joy_speed").as_double();
+
+                        this->declare_parameter<double>("nav2_speed");
+                        nav2_speed = this->get_parameter("nav2_speed").as_double();
 
                 }
 
@@ -39,8 +42,8 @@ class CarController : public rclcpp::Node {
                         msg.header.stamp = this->now();
                         msg.header.frame_id = "base_footprint";
 
-                        msg.twist.linear.x = joy->axes[1] * speed;
-                        msg.twist.angular.z = joy->axes[3] * speed/3;
+                        msg.twist.linear.x = joy->axes[1] * joy_speed;
+                        msg.twist.angular.z = joy->axes[3] * joy_speed/3;
 
                         if (controlable) {
                                 cmd_vel_pub->publish(msg);
@@ -53,8 +56,8 @@ class CarController : public rclcpp::Node {
                         repub_msg.header.stamp = this->now();
                         repub_msg.header.frame_id = "base_footprint";
 
-                        repub_msg.twist.linear.x = 2*msg->linear.x;
-                        repub_msg.twist.angular.z = 2*msg->angular.z;
+                        repub_msg.twist.linear.x = nav2_speed*msg->linear.x;
+                        repub_msg.twist.angular.z = nav2_speed*msg->angular.z;
                         
                         if (!controlable){
                                 cmd_vel_pub->publish(repub_msg);
@@ -67,7 +70,8 @@ class CarController : public rclcpp::Node {
                 rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_nav2_sub;
 
                 bool controlable;
-                double speed;
+                double joy_speed;
+                double nav2_speed;
 };
 
 
