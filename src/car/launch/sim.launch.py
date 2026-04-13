@@ -132,7 +132,6 @@ def generate_launch_description():
 
 
         # Controllers
-
         TimerAction(
             period=3.0,
             actions=[
@@ -142,12 +141,6 @@ def generate_launch_description():
                     arguments=["joint_state_broadcaster"],
                     parameters=[{'use_sim_time': True}],
                 ),
-                # Node(
-                #     package="controller_manager",
-                #     executable="spawner",
-                #     arguments=["diff_drive_controller", "--param-file", robotControllerPath],
-                #     parameters=[{'use_sim_time': True}],
-                # ),
                 Node(
                     package="controller_manager",
                     executable="spawner",
