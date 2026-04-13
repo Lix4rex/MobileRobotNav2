@@ -15,7 +15,7 @@ class CarController : public rclcpp::Node {
                         );
 
                         cmd_vel_pub = this->create_publisher<geometry_msgs::msg::TwistStamped>(
-                                "/diff_drive_controller/cmd_vel", 10
+                                "/omni_wheel_drive_controller/cmd_vel", 10
                         );
 
                         cmd_vel_nav2_sub = this->create_subscription<geometry_msgs::msg::Twist>(
@@ -43,6 +43,7 @@ class CarController : public rclcpp::Node {
                         msg.header.frame_id = "base_footprint";
 
                         msg.twist.linear.x = joy->axes[1] * joy_speed;
+                        msg.twist.linear.y = joy->axes[0] * joy_speed;
                         msg.twist.angular.z = joy->axes[3] * joy_speed/3;
 
                         if (controlable) {

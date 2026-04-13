@@ -52,7 +52,7 @@
     <gazebo reference="rf_link">
         <mu1>1.5</mu1>
         <mu2>0.5</mu2>  <!-- MU2 TRÈS FAIBLE -->
-        <fdir1>0 1 0</fdir1>  <!-- Direction de friction primaire = axe de rotation -->
+        <fdir1>0 -1 0</fdir1>  <!-- Direction de friction primaire = axe de rotation -->
         <kp>10000000.0</kp>
         <kd>10.0</kd>
         <minDepth>0.001</minDepth>
@@ -63,7 +63,7 @@
     <gazebo reference="rb_link">
         <mu1>1.5</mu1>
         <mu2>0.5</mu2>
-        <fdir1>0 1 0</fdir1>
+        <fdir1>0 -1 0</fdir1>
         <kp>10000000.0</kp>
         <kd>10.0</kd>
         <minDepth>0.001</minDepth>
