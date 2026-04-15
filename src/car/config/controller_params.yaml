@@ -1,5 +1,5 @@
 car_controller:
   ros__parameters:
-    controlable: true
+    controlable: false
     joy_speed: 1.0
     nav2_speed: 1.0
