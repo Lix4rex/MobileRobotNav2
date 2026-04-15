@@ -58,6 +58,7 @@ class CarController : public rclcpp::Node {
                         repub_msg.header.frame_id = "base_footprint";
 
                         repub_msg.twist.linear.x = nav2_speed*msg->linear.x;
+                        repub_msg.twist.linear.y = nav2_speed*msg->linear.y;
                         repub_msg.twist.angular.z = nav2_speed*msg->angular.z;
                         
                         if (!controlable){

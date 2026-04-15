@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <robot name="simple_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-        <xacro:include filename="$(find car)/model/gazebo.xacro"/>
-
         <link name="base_footprint"/>
 
         <material name="blue">
@@ -286,8 +284,12 @@
         <!-- ROS2 CONTROL -->
 
         <ros2_control name="RobotController" type="system">
+
                 <hardware>
-                        <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+                        <plugin>micro_ros_hardware/MicroRosHardwareInterface</plugin>
+
+                        <param name="cmd_topic">/wheel_commands</param>
+                        <param name="state_topic">/micro_controller/joint_states</param>
                 </hardware>
 
                 <joint name="lf_joint">

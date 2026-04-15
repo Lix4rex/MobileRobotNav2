@@ -21,6 +21,8 @@ worldRelativePath            = "config/world.sdf"
 rvizConfigRelativePath       = "config/config.rviz"
 controllerParamsRelativePath = "config/controller_params.yaml"
 robotControllerRelativePath  = "config/robot_controller.yaml"
+slamParamsRelativePath       = "config/mapper_params_online_async.yaml"
+nav2ParamsRelativePath       = "config/nav2_params.yaml"
 
 def generate_launch_description():
 
@@ -29,6 +31,8 @@ def generate_launch_description():
     rvizConfigPath       = os.path.join(pkgPath, rvizConfigRelativePath)
     controllerParamsPath = os.path.join(pkgPath, controllerParamsRelativePath)
     robotControllerPath  = os.path.join(pkgPath, robotControllerRelativePath)
+    slamParamsPath       = os.path.join(pkgPath, slamParamsRelativePath)
+    nav2ParamsPath       = os.path.join(pkgPath, nav2ParamsRelativePath)
 
     
     robot_description = ParameterValue(
@@ -62,27 +66,11 @@ def generate_launch_description():
         }.items(),
     )
 
-
-    robot_state_publisher_node = launch_ros.actions.Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="both",
-        parameters=[{
-            "robot_description":robot_description,
-            "use_sim_time": True
-        }]
-    )
-
-    delayed_rsp = launch.actions.TimerAction(
-        period=2.0,
-        actions=[robot_state_publisher_node]
-    )
-
     return LaunchDescription([
 
         gazebo,
 
-        # Bridge
+        # Bridges
 
         #Clock
         Node(
@@ -119,7 +107,20 @@ def generate_launch_description():
         ),
 
         # robot_state_publisher
-        delayed_rsp,
+        TimerAction(
+            period=2.0,
+            actions=[
+                Node(
+                    package="robot_state_publisher",
+                    executable="robot_state_publisher",
+                    output="both",
+                    parameters=[{
+                        "robot_description":robot_description,
+                        "use_sim_time": True
+                    }]
+                ),
+            ]
+        ),
 
         # RViz
         Node(
@@ -154,5 +155,47 @@ def generate_launch_description():
             package="car",
             executable="car_controller",
             parameters = [controllerParamsPath, {'use_sim_time': True}]
-        )
+        ),
+
+
+        # Slam toolbox
+        TimerAction(
+            period=4.0,
+            actions=[
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        PathJoinSubstitution([
+                            FindPackageShare("slam_toolbox"),
+                            "launch",
+                            "online_async_launch.py"
+                        ])
+                    ),
+                    launch_arguments={
+                        "use_sim_time": "true",
+                        "slam_params_file": slamParamsPath 
+                    }.items(),
+                ),
+            ]
+        ),
+
+        # NAV2
+        TimerAction(
+            period=5.0,
+            actions=[
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        PathJoinSubstitution([
+                            FindPackageShare("nav2_bringup"),
+                            "launch",
+                            "navigation_launch.py"
+                        ])
+                    ),
+                    launch_arguments={
+                        "use_sim_time": "true",
+                        "params_file": nav2ParamsPath
+                    }.items(),
+                ),
+            ]
+        ),
+
     ])
