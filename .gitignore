@@ -3,4 +3,6 @@ install/*
 log/*
 site/*
 core
-        
+src/ldlidar_stl_ros2/build/*
+src/ldlidar_stl_ros2/install/*
+src/ldlidar_stl_ros2/log/*
