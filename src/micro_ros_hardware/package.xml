@@ -18,7 +18,7 @@
   <depend>hardware_interface</depend>
   <depend>pluginlib</depend>
   <depend>sensor_msgs</depend>
-  <depend>robot_msgs</depend>
+  <depend>robot_messages</depend>
 
   <export>
     <build_type>ament_cmake</build_type>

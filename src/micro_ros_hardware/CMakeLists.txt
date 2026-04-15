@@ -13,7 +13,7 @@ find_package(hardware_interface REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(robot_msgs REQUIRED)
+find_package(robot_messages REQUIRED)
 
 
 add_library(micro_ros_hardware SHARED
@@ -30,7 +30,7 @@ ament_target_dependencies(micro_ros_hardware
   rclcpp_lifecycle
   hardware_interface
   pluginlib
-  robot_msgs
+  robot_messages
   sensor_msgs
 )
 

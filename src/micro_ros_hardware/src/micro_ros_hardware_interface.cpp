@@ -36,7 +36,7 @@ namespace micro_ros_hardware
                 node_ = rclcpp::Node::make_shared("micro_ros_hardware_interface");
 
                 // Publisher → ESP32 : vitesses cibles de chaque roue
-                wheel_cmd_pub_ = node_->create_publisher<robot_msgs::msg::WheelsCommand>(
+                wheel_cmd_pub_ = node_->create_publisher<robot_messages::msg::WheelsCommand>(
                         cmd_topic_, rclcpp::QoS(10)
                 );
                 
@@ -69,7 +69,7 @@ namespace micro_ros_hardware
 
         hardware_interface::CallbackReturn MicroRosHardwareInterface::on_deactivate(const rclcpp_lifecycle::State & /*previous_state*/){
                 // Envoyer zéro à l'ESP32 avant de désactiver
-                robot_msgs::msg::WheelsCommand msg;
+                robot_messages::msg::WheelsCommand msg;
                 msg.lb_joint = 0.f;
                 msg.rb_joint = 0.f;
                 msg.lf_joint = 0.f;
@@ -144,7 +144,7 @@ namespace micro_ros_hardware
 
         // write() : envoie les commandes de vitesse vers l'ESP32
         hardware_interface::return_type MicroRosHardwareInterface::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
-                robot_msgs::msg::WheelsCommand msg;
+                robot_messages::msg::WheelsCommand msg;
 
                 msg.lf_joint = hw_commands_velocity_[0];
                 msg.rf_joint = hw_commands_velocity_[1];

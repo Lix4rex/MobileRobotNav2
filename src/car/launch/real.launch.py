@@ -59,6 +59,16 @@ def generate_launch_description():
             }]
         ),
 
+        Node(
+            package='topic_tools',
+            executable='relay',
+            arguments=[
+                '/micro_controller/joint_states',
+                '/joint_states'
+            ],
+            output='screen'
+        ),
+
         # ======================
         # RVIZ
         # ======================
@@ -74,10 +84,12 @@ def generate_launch_description():
         # ======================
 
         Node(
-            package='joint_state_publisher',
-            executable='joint_state_publisher',
-            output='screen'
+            package="controller_manager",
+            executable="ros2_control_node",
+            parameters=[robotControllerPath],
+            output="screen"
         ),
+
         TimerAction(
             period=2.0,
             actions=[
@@ -112,65 +124,65 @@ def generate_launch_description():
             ]
         ),
 
-        Node(
-            package='ldlidar_stl_ros2',
-            executable='ldlidar_stl_ros2_node',
-            name='LD19',
-            output='screen',
-            parameters=[
-                {'product_name': 'LDLiDAR_LD19'},
-                {'topic_name': 'scan'},
-                {'frame_id': 'lidar_link'},
-                {'port_name': '/dev/ttyUSB0'},
-                {'port_baudrate': 230400},
-                {'laser_scan_dir': True},
-                {'enable_angle_crop_func': False},
-                {'angle_crop_min': 135.0},
-                {'angle_crop_max': 225.0}
-            ]
-        ),
+        # Node(
+        #     package='ldlidar_stl_ros2',
+        #     executable='ldlidar_stl_ros2_node',
+        #     name='LD19',
+        #     output='screen',
+        #     parameters=[
+        #         {'product_name': 'LDLiDAR_LD19'},
+        #         {'topic_name': 'scan'},
+        #         {'frame_id': 'lidar_link'},
+        #         {'port_name': '/dev/ttyUSB0'},
+        #         {'port_baudrate': 230400},
+        #         {'laser_scan_dir': True},
+        #         {'enable_angle_crop_func': False},
+        #         {'angle_crop_min': 135.0},
+        #         {'angle_crop_max': 225.0}
+        #     ]
+        # ),
 
         # ======================
         # SLAM TOOLBOX (REAL SENSOR INPUT)
         # ======================
-        TimerAction(
-            period=3.0,
-            actions=[
-                IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(
-                        PathJoinSubstitution([
-                            FindPackageShare("slam_toolbox"),
-                            "launch",
-                            "online_async_launch.py"
-                        ])
-                    ),
-                    launch_arguments={
-                        "use_sim_time": "false",
-                        "slam_params_file": slamParamsPath
-                    }.items(),
-                )
-            ]
-        ),
+        # TimerAction(
+        #     period=3.0,
+        #     actions=[
+        #         IncludeLaunchDescription(
+        #             PythonLaunchDescriptionSource(
+        #                 PathJoinSubstitution([
+        #                     FindPackageShare("slam_toolbox"),
+        #                     "launch",
+        #                     "online_async_launch.py"
+        #                 ])
+        #             ),
+        #             launch_arguments={
+        #                 "use_sim_time": "false",
+        #                 "slam_params_file": slamParamsPath
+        #             }.items(),
+        #         )
+        #     ]
+        # ),
 
-        # ======================
-        # NAV2 (REAL ROBOT)
-        # ======================
-        TimerAction(
-            period=5.0,
-            actions=[
-                IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(
-                        PathJoinSubstitution([
-                            FindPackageShare("nav2_bringup"),
-                            "launch",
-                            "navigation_launch.py"
-                        ])
-                    ),
-                    launch_arguments={
-                        "use_sim_time": "false",
-                        "params_file": nav2ParamsPath
-                    }.items(),
-                )
-            ]
-        ),
+        # # ======================
+        # # NAV2 (REAL ROBOT)
+        # # ======================
+        # TimerAction(
+        #     period=5.0,
+        #     actions=[
+        #         IncludeLaunchDescription(
+        #             PythonLaunchDescriptionSource(
+        #                 PathJoinSubstitution([
+        #                     FindPackageShare("nav2_bringup"),
+        #                     "launch",
+        #                     "navigation_launch.py"
+        #                 ])
+        #             ),
+        #             launch_arguments={
+        #                 "use_sim_time": "false",
+        #                 "params_file": nav2ParamsPath
+        #             }.items(),
+        #         )
+        #     ]
+        # ),
     ])
