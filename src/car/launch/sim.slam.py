@@ -18,7 +18,7 @@ from launch.actions import TimerAction
 
 packageName = "car"
 worldRelativePath            = "config/world.sdf"
-rvizConfigRelativePath       = "config/config.rviz"
+rvizConfigRelativePath       = "config/slam-config.rviz"
 controllerParamsRelativePath = "config/controller_params.yaml"
 robotControllerRelativePath  = "config/robot_controller.yaml"
 slamParamsRelativePath       = "config/mapper_params_online_async.yaml"
@@ -41,6 +41,7 @@ def generate_launch_description():
             PathJoinSubstitution([
                 FindPackageShare(packageName), 
                 "model",
+                "slam-robot",
                 "robot.xacro"
             ])
         ]),
@@ -155,6 +156,12 @@ def generate_launch_description():
             package="car",
             executable="car_controller",
             parameters = [controllerParamsPath, {'use_sim_time': True}]
+        ),
+
+        Node(
+            package="car",
+            executable="gt_node",
+            parameters=[{'use_sim_time': True}]
         ),
 
 

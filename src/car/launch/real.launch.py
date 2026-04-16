@@ -38,7 +38,8 @@ def generate_launch_description():
             PathJoinSubstitution([
                 FindPackageShare(packageName),
                 "model",
-                "real_robot.xacro"
+                "real-robot",
+                "robot.xacro"
             ])
         ]),
         value_type=str
