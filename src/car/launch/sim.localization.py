@@ -175,11 +175,17 @@ def generate_launch_description():
         ),
 
         # EKF
-        Node(
-            package="robot_localization",
-            executable="ekf_node",
-            arguments=["--param-file", ekfConfigPath],
-            parameters=[{'use_sim_time': True}]
+        TimerAction(
+            period=3.5,
+            actions=[
+                Node(
+                    package="robot_localization",
+                    executable="ekf_node",
+                    name="ekf_filter_node",
+                    output="screen",
+                    parameters=[ekfConfigPath, {'use_sim_time': True}],
+                ),
+            ]
         ),
 
 
