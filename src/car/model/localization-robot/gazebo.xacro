@@ -63,6 +63,17 @@
             <update_rate>10</update_rate>
             <visualize>true</visualize>
             <topic>imu</topic>
+            <noise>
+                <type>gaussian</type>
+                <rate>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </rate>
+                <bias>
+                    <mean>0.0001</mean>
+                    <stddev>0.0001</stddev>
+                </bias>
+            </noise>
         </sensor>
     </gazebo>
 

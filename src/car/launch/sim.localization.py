@@ -23,6 +23,7 @@ controllerParamsRelativePath = "config/controller_params.yaml"
 robotControllerRelativePath  = "config/localization_robot_controller.yaml"
 nav2ParamsRelativePath       = "config/nav2_params.yaml"
 ekfConfigRelativePath        = "config/ekf.yaml"
+mapFileRelativePath          = "config/map/map_save.yaml"
 
 def generate_launch_description():
 
@@ -33,7 +34,7 @@ def generate_launch_description():
     robotControllerPath  = os.path.join(pkgPath, robotControllerRelativePath)
     ekfConfigPath        = os.path.join(pkgPath, ekfConfigRelativePath)
     nav2ParamsPath       = os.path.join(pkgPath, nav2ParamsRelativePath)
-    
+    mapFilePath          = os.path.join(pkgPath, mapFileRelativePath)    
 
     
     robot_description = ParameterValue(
@@ -69,6 +70,8 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        
+        launch_ros.actions.SetParameter(name='use_sim_time', value=True),
 
         gazebo,
 
@@ -134,6 +137,13 @@ def generate_launch_description():
             ]
         ),
 
+        Node( 
+            package='tf2_ros', 
+            executable='static_transform_publisher', 
+            arguments=[ '0', '0', '0', '0', '0', '0', 'map', 'odom' ], 
+            parameters=[{'use_sim_time': True}], 
+        ),
+
         # RViz
         Node(
             package='rviz2',
@@ -188,25 +198,27 @@ def generate_launch_description():
             ]
         ),
 
-
         # NAV2
-        # TimerAction(
-        #     period=5.0,
-        #     actions=[
-        #         IncludeLaunchDescription(
-        #             PythonLaunchDescriptionSource(
-        #                 PathJoinSubstitution([
-        #                     FindPackageShare("nav2_bringup"),
-        #                     "launch",
-        #                     "navigation_launch.py"
-        #                 ])
-        #             ),
-        #             launch_arguments={
-        #                 "use_sim_time": "true",
-        #                 "params_file": nav2ParamsPath
-        #             }.items(),
-        #         ),
-        #     ]
-        # ),
+        TimerAction(
+            period=5.0,
+            actions=[
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        PathJoinSubstitution([
+                            FindPackageShare("nav2_bringup"),
+                            "launch",
+                            "bringup_launch.py"
+                        ])
+                    ),
+                    launch_arguments={
+                        "slam": "False",
+                        "map": mapFilePath,
+                        "use_sim_time": "true",
+                        "params_file": nav2ParamsPath,
+                        "autostart": "true"
+                    }.items(),
+                ),
+            ]
+        ),
 
     ])

@@ -25,8 +25,11 @@ omni_wheel_drive_controller:
 
     odom_frame_id: odom
     base_frame_id: base_footprint
-    pose_covariance_diagonal: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-    twist_covariance_diagonal: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    pose_covariance_diagonal: [0.001, 0.001, 1000.0,
+                              1000.0, 1000.0, 0.01]
+
+    twist_covariance_diagonal: [0.01, 0.01, 1000.0, 
+                                1000.0, 1000.0, 0.02]
 
     open_loop: false
     position_feedback: true

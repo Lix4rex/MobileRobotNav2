@@ -68,6 +68,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        launch_ros.actions.SetParameter(name='use_sim_time', value=True),  
 
         gazebo,
 

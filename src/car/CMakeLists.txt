@@ -15,7 +15,7 @@ find_package(gz-transport13 REQUIRED)
 find_package(gz-msgs10 REQUIRED)
 
 add_executable(gt_node src/gt_node.cpp)
-ament_target_dependencies(gt_node rclcpp nav_msgs)
+ament_target_dependencies(gt_node rclcpp nav_msgs sensor_msgs)
 
 target_link_libraries(gt_node
   gz-transport13::core

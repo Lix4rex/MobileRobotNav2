@@ -53,10 +53,10 @@
       <pose>0 10 0.5 0 0 0</pose>
       <link name="link">
         <collision name="col">
-          <geometry><box><size>40.8 0.2 10</size></box></geometry>
+          <geometry><box><size>40.8 0.2 0.1</size></box></geometry>
         </collision>
         <visual name="vis">
-          <geometry><box><size>40.8 0.2 10</size></box></geometry>
+          <geometry><box><size>40.8 0.2 0.1</size></box></geometry>
           <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
         </visual>
       </link>
@@ -67,10 +67,10 @@
       <pose>0 -10 0.5 0 0 0</pose>
       <link name="link">
         <collision name="col">
-          <geometry><box><size>40.8 0.2 10</size></box></geometry>
+          <geometry><box><size>40.8 0.2 0.1</size></box></geometry>
         </collision>
         <visual name="vis">
-          <geometry><box><size>40.8 0.2 10</size></box></geometry>
+          <geometry><box><size>40.8 0.2 0.1</size></box></geometry>
           <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
         </visual>
       </link>
@@ -81,10 +81,10 @@
       <pose>10 0 0.5 0 0 0</pose>
       <link name="link">
         <collision name="col">
-          <geometry><box><size>0.2 40.8 10</size></box></geometry>
+          <geometry><box><size>0.2 40.8 0.1</size></box></geometry>
         </collision>
         <visual name="vis">
-          <geometry><box><size>0.2 40.8 10</size></box></geometry>
+          <geometry><box><size>0.2 40.8 0.1</size></box></geometry>
           <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
         </visual>
       </link>
@@ -95,10 +95,10 @@
       <pose>-10 0 0.5 0 0 0</pose>
       <link name="link">
         <collision name="col">
-          <geometry><box><size>0.2 40.8 10</size></box></geometry>
+          <geometry><box><size>0.2 40.8 0.1</size></box></geometry>
         </collision>
         <visual name="vis">
-          <geometry><box><size>0.2 40.8 10</size></box></geometry>
+          <geometry><box><size>0.2 40.8 0.1</size></box></geometry>
           <material><ambient>0.8 0.8 0.8 1</ambient><diffuse>0.8 0.8 0.8 1</diffuse></material>
         </visual>
       </link>
@@ -108,7 +108,7 @@
 
     <model name="tower_NE">
       <static>true</static>
-      <pose>20 20 5 0 0 0</pose>
+      <pose>10 10 5 0 0 0</pose>
       <link name="link">
         <collision name="col">
           <geometry><cylinder><radius>0.3</radius><length>10.0</length></cylinder></geometry>
@@ -122,7 +122,7 @@
 
     <model name="tower_NW">
       <static>true</static>
-      <pose>-20 20 5 0 0 0</pose>
+      <pose>-10 10 5 0 0 0</pose>
       <link name="link">
         <collision name="col">
           <geometry><cylinder><radius>0.3</radius><length>10.0</length></cylinder></geometry>
@@ -136,7 +136,7 @@
 
     <model name="tower_SE">
       <static>true</static>
-      <pose>20 -20 5 0 0 0</pose>
+      <pose>10 -10 5 0 0 0</pose>
       <link name="link">
         <collision name="col">
           <geometry><cylinder><radius>0.3</radius><length>10.0</length></cylinder></geometry>
@@ -150,7 +150,7 @@
 
     <model name="tower_SW">
       <static>true</static>
-      <pose>-20 -20 5 0 0 0</pose>
+      <pose>-10 -10 5 0 0 0</pose>
       <link name="link">
         <collision name="col">
           <geometry><cylinder><radius>0.3</radius><length>10.0</length></cylinder></geometry>
