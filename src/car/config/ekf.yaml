@@ -1,9 +1,9 @@
 ### ekf config file ###
 ekf_filter_node:
     ros__parameters:
-        frequency: 20.0
+        frequency: 30.0
         sensor_timeout: 0.1
-        two_d_mode: true  # ⚠️ CHANGÉ: true pour robot planaire
+        two_d_mode: true  # true pour robot planaire
         transform_time_offset: 0.0
         transform_timeout: 0.0
         print_diagnostics: true
@@ -11,6 +11,7 @@ ekf_filter_node:
         permit_corrected_publication: false
         publish_acceleration: false
         publish_tf: true
+        use_sim_time: true
 
         map_frame: map
         odom_frame: odom
@@ -19,8 +20,8 @@ ekf_filter_node:
 
         # Odométrie
         odom0: omni_wheel_drive_controller/odom
-        odom0_config: [true,  true,  false,  # x, y, z
-                       false, false, true,   # roll, pitch, yaw
+        odom0_config: [false,  false,  false,  # x, y, z
+                       false, false, false,   # roll, pitch, yaw
                        true,  true,  false,  # vx, vy, vz 
                        false, false, true,   # vroll, vpitch, vyaw
                        false, false, false]  # ax, ay, az 
@@ -34,9 +35,9 @@ ekf_filter_node:
         # IMU
         imu0: /imu/fixed
         imu0_config: [false, false, false,  # x, y, z
-                      false, false, true,   # roll, pitch, yaw 
+                      true, true, true,   # roll, pitch, yaw 
                       false, false, false,  # vx, vy, vz
-                      false, false, true,   # vroll, vpitch, vyaw
+                      true, true, true,   # vroll, vpitch, vyaw
                       true,  true,  false]  # ax, ay, az 
         imu0_differential: false
         imu0_relative: true 

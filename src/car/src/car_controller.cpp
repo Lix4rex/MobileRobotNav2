@@ -1,6 +1,7 @@
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist_stamped.hpp"
 #include "sensor_msgs/msg/joy.hpp"
+#include "sensor_msgs/msg/laser_scan.hpp"
 
 using namespace std::chrono_literals;
 
@@ -22,6 +23,18 @@ class CarController : public rclcpp::Node {
                                 "/cmd_vel", 10, 
                                 std::bind(&CarController::cmd_vel_nav2_callback, this, std::placeholders::_1)
                         );
+
+                        scan_sub = this->create_subscription<sensor_msgs::msg::LaserScan>(
+                                "/scan", 10,
+                                std::bind(&CarController::scan_cb, this, std::placeholders::_1)
+                        );
+
+                        scan_pub = this->create_publisher<sensor_msgs::msg::LaserScan>(
+                                "/scan_corrected", 10
+                        );
+
+                        this->declare_parameter<bool>("sim");
+                        sim = this->get_parameter("sim").as_bool();
 
                         this->declare_parameter<bool>("controlable");
                         controlable = this->get_parameter("controlable").as_bool();
@@ -67,10 +80,24 @@ class CarController : public rclcpp::Node {
 
                 }
 
+                void scan_cb(const sensor_msgs::msg::LaserScan::SharedPtr msg){
+                        auto repub_msg = sensor_msgs::msg::LaserScan(*msg); 
+                        double scale = 10.0;
+                        for (size_t i = 0; i < msg->ranges.size(); i++) {
+                                repub_msg.ranges[i] = msg->ranges[i] * scale;
+                        }
+                        if (!sim){
+                                scan_pub->publish(repub_msg);
+                        }
+                }
+
                 rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_sub;
                 rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr cmd_vel_pub;
                 rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_nav2_sub;
+                rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub;
+                rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr scan_pub;
 
+                bool sim;
                 bool controlable;
                 double joy_speed;
                 double nav2_speed;

@@ -19,9 +19,9 @@ from launch.actions import TimerAction
 packageName = "car"
 worldRelativePath            = "config/world.sdf"
 rvizConfigRelativePath       = "config/config.rviz"
-controllerParamsRelativePath = "config/controller_params.yaml"
-robotControllerRelativePath  = "config/localization_robot_controller.yaml"
-nav2ParamsRelativePath       = "config/nav2_params.yaml"
+controllerParamsRelativePath = "config/sim/controller_params.yaml"
+robotControllerRelativePath  = "config/robot_controller.yaml"
+nav2ParamsRelativePath       = "config/sim/nav2_params.yaml"
 ekfConfigRelativePath        = "config/ekf.yaml"
 mapFileRelativePath          = "config/map/map_save.yaml"
 
@@ -185,18 +185,18 @@ def generate_launch_description():
         ),
 
         # EKF
-        TimerAction(
-            period=3.5,
-            actions=[
-                Node(
-                    package="robot_localization",
-                    executable="ekf_node",
-                    name="ekf_filter_node",
-                    output="screen",
-                    parameters=[ekfConfigPath, {'use_sim_time': True}],
-                ),
-            ]
-        ),
+        # TimerAction(
+        #     period=3.5,
+        #     actions=[
+        #         Node(
+        #             package="robot_localization",
+        #             executable="ekf_node",
+        #             name="ekf_filter_node",
+        #             output="screen",
+        #             parameters=[ekfConfigPath, {'use_sim_time': True}],
+        #         ),
+        #     ]
+        # ),
 
         # NAV2
         TimerAction(

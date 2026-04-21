@@ -16,10 +16,11 @@ import launch_ros
 packageName = "car"
 
 rvizConfigRelativePath       = "config/config.rviz"
-controllerParamsRelativePath = "config/controller_params.yaml"
+controllerParamsRelativePath = "config/real/controller_params.yaml"
 robotControllerRelativePath  = "config/robot_controller.yaml"
-slamParamsRelativePath       = "config/mapper_params_online_async.yaml"
-nav2ParamsRelativePath       = "config/nav2_params.yaml"
+nav2ParamsRelativePath       = "config/real/nav2_params.yaml"
+ekfConfigRelativePath        = "config/ekf.yaml"
+mapFileRelativePath          = "config/map/map_save.yaml"
 
 
 def generate_launch_description():
@@ -29,8 +30,9 @@ def generate_launch_description():
     rvizConfigPath       = os.path.join(pkgPath, rvizConfigRelativePath)
     controllerParamsPath = os.path.join(pkgPath, controllerParamsRelativePath)
     robotControllerPath  = os.path.join(pkgPath, robotControllerRelativePath)
-    slamParamsPath       = os.path.join(pkgPath, slamParamsRelativePath)
     nav2ParamsPath       = os.path.join(pkgPath, nav2ParamsRelativePath)
+    ekfConfigPath        = os.path.join(pkgPath, ekfConfigRelativePath)
+    mapFilePath          = os.path.join(pkgPath, mapFileRelativePath)    
 
     robot_description = ParameterValue(
         Command([
@@ -58,6 +60,13 @@ def generate_launch_description():
                 "robot_description": robot_description,
                 "use_sim_time": False
             }]
+        ),
+
+        Node( 
+            package='tf2_ros', 
+            executable='static_transform_publisher', 
+            arguments=[ '0', '0', '0', '0', '0', '0', 'map', 'odom' ], 
+            parameters=[{'use_sim_time': False}], 
         ),
 
         Node(
@@ -143,31 +152,23 @@ def generate_launch_description():
             ]
         ),
 
-        # ======================
-        # SLAM TOOLBOX (REAL SENSOR INPUT)
-        # ======================
-        TimerAction(
-            period=3.0,
-            actions=[
-                IncludeLaunchDescription(
-                    PythonLaunchDescriptionSource(
-                        PathJoinSubstitution([
-                            FindPackageShare("slam_toolbox"),
-                            "launch",
-                            "online_async_launch.py"
-                        ])
-                    ),
-                    launch_arguments={
-                        "use_sim_time": "false",
-                        "slam_params_file": slamParamsPath
-                    }.items(),
-                )
-            ]
-        ),
 
-        # ======================
-        # NAV2 (REAL ROBOT)
-        # ======================
+
+        # EKF
+        # TimerAction(
+        #     period=3.5,
+        #     actions=[
+        #         Node(
+        #             package="robot_localization",
+        #             executable="ekf_node",
+        #             name="ekf_filter_node",
+        #             output="screen",
+        #             parameters=[ekfConfigPath, {'use_sim_time': True}],
+        #         ),
+        #     ]
+        # ),
+
+        # NAV2
         TimerAction(
             period=5.0,
             actions=[
@@ -176,14 +177,17 @@ def generate_launch_description():
                         PathJoinSubstitution([
                             FindPackageShare("nav2_bringup"),
                             "launch",
-                            "navigation_launch.py"
+                            "bringup_launch.py"
                         ])
                     ),
                     launch_arguments={
+                        "slam": "False",
+                        "map": mapFilePath,
                         "use_sim_time": "false",
-                        "params_file": nav2ParamsPath
+                        "params_file": nav2ParamsPath,
+                        "autostart": "true"
                     }.items(),
-                )
+                ),
             ]
         ),
     ])

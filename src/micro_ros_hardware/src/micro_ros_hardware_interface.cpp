@@ -146,10 +146,11 @@ namespace micro_ros_hardware
         hardware_interface::return_type MicroRosHardwareInterface::write(const rclcpp::Time & /*time*/, const rclcpp::Duration & /*period*/){
                 robot_messages::msg::WheelsCommand msg;
 
+
                 msg.lf_joint = hw_commands_velocity_[0];
-                msg.rf_joint = hw_commands_velocity_[1];
+                msg.rf_joint = -hw_commands_velocity_[1];
                 msg.lb_joint = hw_commands_velocity_[2];
-                msg.rb_joint = hw_commands_velocity_[3];
+                msg.rb_joint = -hw_commands_velocity_[3];
 
                 wheel_cmd_pub_->publish(msg);
 
