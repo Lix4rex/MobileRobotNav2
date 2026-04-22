@@ -129,10 +129,10 @@ namespace micro_ros_hardware
                         for (size_t j = 0; j < latest_joint_states_.name.size(); ++j) {
                                 if (latest_joint_states_.name[j] == joint_names_[i]) {
                                         if (j < latest_joint_states_.position.size()) {
-                                                hw_states_position_[i] = latest_joint_states_.position[j];
+                                                hw_states_position_[i] = -latest_joint_states_.position[j];
                                         }
                                         if (j < latest_joint_states_.velocity.size()) {
-                                                hw_states_velocity_[i] = latest_joint_states_.velocity[j];
+                                                hw_states_velocity_[i] = -latest_joint_states_.velocity[j];
                                         }
                                         break;
                                 }
@@ -147,10 +147,10 @@ namespace micro_ros_hardware
                 robot_messages::msg::WheelsCommand msg;
 
 
-                msg.lf_joint = hw_commands_velocity_[0];
+                msg.lf_joint = -hw_commands_velocity_[0];
                 msg.rf_joint = -hw_commands_velocity_[1];
-                msg.lb_joint = hw_commands_velocity_[2];
-                msg.rb_joint = -hw_commands_velocity_[3];
+                msg.rb_joint = -hw_commands_velocity_[2];
+                msg.lb_joint = -hw_commands_velocity_[3];
 
                 wheel_cmd_pub_->publish(msg);
 

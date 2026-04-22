@@ -57,7 +57,7 @@ class CarController : public rclcpp::Node {
 
                         msg.twist.linear.x = joy->axes[1] * joy_speed;
                         msg.twist.linear.y = joy->axes[0] * joy_speed;
-                        msg.twist.angular.z = joy->axes[3] * joy_speed/3;
+                        msg.twist.angular.z = -joy->axes[3] * joy_speed;
 
                         if (controlable) {
                                 cmd_vel_pub->publish(msg);

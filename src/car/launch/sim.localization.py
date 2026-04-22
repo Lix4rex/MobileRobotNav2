@@ -20,7 +20,7 @@ packageName = "car"
 worldRelativePath            = "config/world.sdf"
 rvizConfigRelativePath       = "config/config.rviz"
 controllerParamsRelativePath = "config/sim/controller_params.yaml"
-robotControllerRelativePath  = "config/robot_controller.yaml"
+robotControllerRelativePath  = "config/real/robot_controller.yaml"
 nav2ParamsRelativePath       = "config/sim/nav2_params.yaml"
 ekfConfigRelativePath        = "config/ekf.yaml"
 mapFileRelativePath          = "config/map/map_save.yaml"
@@ -200,7 +200,7 @@ def generate_launch_description():
 
         # NAV2
         TimerAction(
-            period=5.0,
+            period=7.0,
             actions=[
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(

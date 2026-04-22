@@ -102,14 +102,14 @@ controller_server:
       yaw_goal_tolerance: 0.25
     FollowPath:
       plugin: "dwb_core::DWBLocalPlanner"
-      debug_trajectory_details: True
+      debug_trajectory_details: False
       min_vel_x: 0.0
       min_vel_y: 0.0
-      max_vel_x: 10.26
-      max_vel_y: 10.26
+      max_vel_x: 1.0
+      max_vel_y: 1.0
       max_vel_theta: 1.0
       min_speed_xy: 0.0
-      max_speed_xy: 10.26
+      max_speed_xy: 1.0
       min_speed_theta: 0.0
       acc_lim_x: 2.5
       acc_lim_y: 2.5
@@ -117,10 +117,10 @@ controller_server:
       decel_lim_x: -2.5
       decel_lim_y: -2.5
       decel_lim_theta: -3.2
-      vx_samples: 20
+      vx_samples: 5
       vy_samples: 5
-      vtheta_samples: 20
-      sim_time: 1.7
+      vtheta_samples: 5
+      sim_time: 1.0
       linear_granularity: 0.05
       angular_granularity: 0.025
       xy_goal_tolerance: 0.25
@@ -149,8 +149,8 @@ local_costmap:
       global_frame: odom
       robot_base_frame: base_footprint
       rolling_window: true
-      width: 50
-      height: 50
+      width: 3
+      height: 3
       resolution: 0.05
       robot_radius: 0.42
       plugins: ["voxel_layer", "inflation_layer"]

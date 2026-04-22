@@ -17,10 +17,10 @@ packageName = "car"
 
 rvizConfigRelativePath       = "config/config.rviz"
 controllerParamsRelativePath = "config/real/controller_params.yaml"
-robotControllerRelativePath  = "config/robot_controller.yaml"
+robotControllerRelativePath  = "config/real/robot_controller.yaml"
 nav2ParamsRelativePath       = "config/real/nav2_params.yaml"
 ekfConfigRelativePath        = "config/ekf.yaml"
-mapFileRelativePath          = "config/map/map_save.yaml"
+mapFileRelativePath          = "config/map/big_empty_map.yaml"
 
 
 def generate_launch_description():
@@ -69,15 +69,15 @@ def generate_launch_description():
             parameters=[{'use_sim_time': False}], 
         ),
 
-        Node(
-            package='topic_tools',
-            executable='relay',
-            arguments=[
-                '/micro_controller/joint_states',
-                '/joint_states'
-            ],
-            output='screen'
-        ),
+        # Node(
+        #     package='topic_tools',
+        #     executable='relay',
+        #     arguments=[
+        #         '/micro_controller/joint_states',
+        #         '/joint_states'
+        #     ],
+        #     output='screen'
+        # ),
 
         # ======================
         # RVIZ
@@ -114,8 +114,6 @@ def generate_launch_description():
                     executable="spawner",
                     arguments=[
                         "omni_wheel_drive_controller",
-                        "--param-file",
-                        robotControllerPath
                     ],
                     parameters=[{'use_sim_time': False}],
                 ),
@@ -134,23 +132,23 @@ def generate_launch_description():
             ]
         ),
 
-        Node(
-            package='ldlidar_stl_ros2',
-            executable='ldlidar_stl_ros2_node',
-            name='LD19',
-            output='screen',
-            parameters=[
-                {'product_name': 'LDLiDAR_LD19'},
-                {'topic_name': 'scan'},
-                {'frame_id': 'lidar_link'},
-                {'port_name': '/dev/ttyUSB0'},
-                {'port_baudrate': 230400},
-                {'laser_scan_dir': True},
-                {'enable_angle_crop_func': False},
-                {'angle_crop_min': 135.0},
-                {'angle_crop_max': 225.0}
-            ]
-        ),
+        # Node(
+        #     package='ldlidar_stl_ros2',
+        #     executable='ldlidar_stl_ros2_node',
+        #     name='LD19',
+        #     output='screen',
+        #     parameters=[
+        #         {'product_name': 'LDLiDAR_LD19'},
+        #         {'topic_name': 'scan'},
+        #         {'frame_id': 'lidar_link'},
+        #         {'port_name': '/dev/ttyUSB0'},
+        #         {'port_baudrate': 230400},
+        #         {'laser_scan_dir': True},
+        #         {'enable_angle_crop_func': False},
+        #         {'angle_crop_min': 135.0},
+        #         {'angle_crop_max': 225.0}
+        #     ]
+        # ),
 
 
 
@@ -170,7 +168,7 @@ def generate_launch_description():
 
         # NAV2
         TimerAction(
-            period=5.0,
+            period=7.0,
             actions=[
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
