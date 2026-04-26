@@ -21,6 +21,7 @@ robotControllerRelativePath  = "config/real/robot_controller.yaml"
 nav2ParamsRelativePath       = "config/real/nav2_params.yaml"
 ekfConfigRelativePath        = "config/ekf.yaml"
 mapFileRelativePath          = "config/map/big_empty_map.yaml"
+mapImageFileRelativePath          = "config/map/table.yaml"
 
 
 def generate_launch_description():
@@ -33,6 +34,7 @@ def generate_launch_description():
     nav2ParamsPath       = os.path.join(pkgPath, nav2ParamsRelativePath)
     ekfConfigPath        = os.path.join(pkgPath, ekfConfigRelativePath)
     mapFilePath          = os.path.join(pkgPath, mapFileRelativePath)    
+    mapImageFilePath          = os.path.join(pkgPath, mapImageFileRelativePath)    
 
     robot_description = ParameterValue(
         Command([
@@ -173,7 +175,7 @@ def generate_launch_description():
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
                         PathJoinSubstitution([
-                            FindPackageShare("nav2_bringup"),
+                            FindPackageShare("car"),
                             "launch",
                             "bringup_launch.py"
                         ])
@@ -186,6 +188,7 @@ def generate_launch_description():
                         "autostart": "true"
                     }.items(),
                 ),
+
             ]
         ),
     ])

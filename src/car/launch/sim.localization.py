@@ -20,10 +20,10 @@ packageName = "car"
 worldRelativePath            = "config/world.sdf"
 rvizConfigRelativePath       = "config/config.rviz"
 controllerParamsRelativePath = "config/sim/controller_params.yaml"
-robotControllerRelativePath  = "config/real/robot_controller.yaml"
+robotControllerRelativePath  = "config/sim/robot_controller.yaml"
 nav2ParamsRelativePath       = "config/sim/nav2_params.yaml"
 ekfConfigRelativePath        = "config/ekf.yaml"
-mapFileRelativePath          = "config/map/map_save.yaml"
+mapFileRelativePath          = "config/map/big_empty_map.yaml"
 
 def generate_launch_description():
 
