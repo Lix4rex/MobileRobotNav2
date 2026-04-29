@@ -205,7 +205,7 @@ def generate_launch_description():
                 IncludeLaunchDescription(
                     PythonLaunchDescriptionSource(
                         PathJoinSubstitution([
-                            FindPackageShare("nav2_bringup"),
+                            FindPackageShare("car"),
                             "launch",
                             "bringup_launch.py"
                         ])
