@@ -9,7 +9,7 @@ class AnusController : public rclcpp::Node {
                 AnusController() : Node("anus_controller"){
                         ask_drop_jengas_topic_sub = this->create_subscription<std_msgs::msg::Bool>(
                                 "/start_drop_jengas", 10,
-                                std::bind(&AnusController::use_anus_callback, this, std::placeholders::_1)
+                                std::bind(&AnusController::drop_jengas_callback, this, std::placeholders::_1)
                         );
                         answer_drop_jengas_topic_pub = this->create_publisher<std_msgs::msg::Bool>(
                                 "/drop_jengas_answer", 10
@@ -23,13 +23,13 @@ class AnusController : public rclcpp::Node {
 
                 bool dropping_jengas;
 
-                void use_anus_callback(const std_msgs::msg::Bool::SharedPtr msg){
+                void drop_jengas_callback(const std_msgs::msg::Bool::SharedPtr msg){
                         if (!msg->data || dropping_jengas) {RCLCPP_INFO(this->get_logger(), "ALREADY DROPPING JENGAS"); return;}
                         dropping_jengas = true;
-                        use_anus();
+                        drop_jengas();
                 }
 
-                void use_anus(){
+                void drop_jengas(){
                         RCLCPP_INFO(this->get_logger(), "BEGIN DROPPING JENGAS");
                         drop_fake_running_timer_ = this->create_wall_timer(
                                 std::chrono::seconds(5),
