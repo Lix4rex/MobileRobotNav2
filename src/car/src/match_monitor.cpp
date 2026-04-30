@@ -9,6 +9,7 @@
 #include "custom_action_interfaces/action/grab_jengas.hpp"
 #include "custom_action_interfaces/action/select_jengas.hpp"
 #include "custom_action_interfaces/action/drop_jengas.hpp"
+#include "nav2_msgs/action/navigate_to_pose.hpp"
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
@@ -30,6 +31,24 @@ class MatchMonitor : public rclcpp::Node {
                 
                 using DropJengas = custom_action_interfaces::action::DropJengas;
                 using GoalHandleDropJengas = rclcpp_action::ClientGoalHandle<DropJengas>;
+
+                using NavigateToPose = nav2_msgs::action::NavigateToPose;
+                using GoalHandleNav = rclcpp_action::ClientGoalHandle<NavigateToPose>;
+
+
+                struct TargetPose {
+                        double x;
+                        double y;
+                        double theta;
+                };
+                enum class MatchState{
+                        IDLE,
+                        MOVE_TO_TARGET_POSE,
+                        GRAB,
+                        SELECT,
+                        DROP,
+                        FINISHED
+                };
 
 
                 explicit MatchMonitor(const rclcpp::NodeOptions & options) : Node("match_monitor", options){
@@ -63,6 +82,11 @@ class MatchMonitor : public rclcpp::Node {
                         this->anus_client_ptr_ = rclcpp_action::create_client<DropJengas>(
                                 this,
                                 "drop_jengas"
+                        );
+                        
+                        this->nav_client_ptr_ = rclcpp_action::create_client<NavigateToPose>(
+                                this,
+                                "navigate_to_pose"
                         );
                 }
 
@@ -170,7 +194,7 @@ class MatchMonitor : public rclcpp::Node {
                                 std::stringstream ss;
                                 ss << "SUCCESSFULLY SELECTED JENGAS";
                                 RCLCPP_INFO(this->get_logger(), ss.str().c_str());
-                                current_state_ = MatchState::DROP;
+                                current_state_ = MatchState::MOVE_TO_TARGET_POSE;
                                 match_loop();
                         };
                         this->stomach_client_ptr_->async_send_goal(goal_msg, send_goal_options);
@@ -230,6 +254,41 @@ class MatchMonitor : public rclcpp::Node {
                         this->anus_client_ptr_->async_send_goal(goal_msg, send_goal_options);
                 }
 
+                void send_nav_goal(TargetPose target){
+                        if (!nav_client_ptr_->wait_for_action_server()) {
+                                RCLCPP_ERROR(this->get_logger(), "Nav2 not available");
+                                return;
+                        }
+
+                        auto goal_msg = NavigateToPose::Goal();
+
+                        goal_msg.pose.header.frame_id = "map";
+                        goal_msg.pose.header.stamp = this->now();
+
+                        goal_msg.pose.pose.position.x = target.x;
+                        goal_msg.pose.pose.position.y = target.y;
+
+                        // orientation simple (theta → quaternion)
+                        goal_msg.pose.pose.orientation.z = sin(target.theta / 2.0);
+                        goal_msg.pose.pose.orientation.w = cos(target.theta / 2.0);
+
+                        auto send_goal_options = rclcpp_action::Client<NavigateToPose>::SendGoalOptions();
+
+                        send_goal_options.result_callback = [this](const GoalHandleNav::WrappedResult & result){
+                                if (result.code != rclcpp_action::ResultCode::SUCCEEDED) {
+                                        RCLCPP_ERROR(this->get_logger(), "Navigation failed");
+                                        return;
+                                }
+
+                                RCLCPP_INFO(this->get_logger(), "Arrived at target → GRAB");
+
+                                current_state_ = MatchState::GRAB;
+                                send_oesophage_goal();
+                        };
+
+                        nav_client_ptr_->async_send_goal(goal_msg, send_goal_options);
+                }
+
 
         private:
 
@@ -239,20 +298,6 @@ class MatchMonitor : public rclcpp::Node {
                         speed = msg->data;
                 }
 
-
-                struct TargetPose {
-                        double x;
-                        double y;
-                        double theta;
-                };
-                enum class MatchState{
-                        IDLE,
-                        MOVE_TO_TARGET_POSE,
-                        GRAB,
-                        SELECT,
-                        DROP,
-                        FINISHED
-                };
                 MatchState current_state_ = MatchState::IDLE;
                 TargetPose current_target_ = {0.0, 0.0, 0.0};
                 
@@ -270,10 +315,7 @@ class MatchMonitor : public rclcpp::Node {
                 void match_loop(){
                         switch(current_state_){
                                 case MatchState::MOVE_TO_TARGET_POSE:
-                                        RCLCPP_INFO(this->get_logger(), "Going to defined position...");
-                                        // ici tu pourrais appeler un action de navigation
-                                        current_state_ = MatchState::GRAB;
-                                        match_loop();
+                                        send_nav_goal(current_target_);
                                 break;
 
                                 case MatchState::GRAB:
@@ -302,15 +344,15 @@ class MatchMonitor : public rclcpp::Node {
 
                 // Oesophage
                 rclcpp_action::Client<GrabJengas>::SharedPtr oesophage_client_ptr_;
-                rclcpp::TimerBase::SharedPtr oesophage_client_timer_;
 
                 // Stomach
                 rclcpp_action::Client<SelectJengas>::SharedPtr stomach_client_ptr_;
-                rclcpp::TimerBase::SharedPtr stomach_client_timer_;
 
                 // Anus
                 rclcpp_action::Client<DropJengas>::SharedPtr anus_client_ptr_;
-                rclcpp::TimerBase::SharedPtr anus_client_timer_;
+
+                // Navigation
+                rclcpp_action::Client<NavigateToPose>::SharedPtr nav_client_ptr_;
 
 };
 }

@@ -221,4 +221,20 @@ def generate_launch_description():
             ]
         ),
 
+        # Action servers
+        TimerAction(
+            period=7.0,
+            actions=[
+                IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource(
+                        PathJoinSubstitution([
+                            FindPackageShare("car"),
+                            "launch",
+                            "launch_action_servers.py"
+                        ])
+                    ),
+                ),
+            ]
+        ),
+
     ])

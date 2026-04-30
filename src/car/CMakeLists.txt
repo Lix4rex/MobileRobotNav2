@@ -12,6 +12,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
 find_package(gz-transport13 REQUIRED)
 find_package(gz-msgs10 REQUIRED)
 
@@ -64,6 +65,7 @@ target_compile_definitions(action_client
 )
 ament_target_dependencies(action_client
   "std_msgs"
+  "nav2_msgs"
   "custom_action_interfaces"
   "rclcpp"
   "rclcpp_action"
