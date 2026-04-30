@@ -46,6 +46,12 @@ class ScreenMonitor : public rclcpp::Node {
 
         private: 
 
+
+                rclcpp::TimerBase::SharedPtr parameters_timer_;
+
+                rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr speed_topic_pub;
+                double speed;
+
                 void publish_params(){
                         // speed publication
                         std_msgs::msg::Float64 msg;
@@ -55,6 +61,9 @@ class ScreenMonitor : public rclcpp::Node {
                         // other parameters publication
                         // ...
                 }
+
+                
+                // Calibration action
 
                 void begin_calibration(){
                         if (!calibration_pressed) return;
@@ -74,12 +83,6 @@ class ScreenMonitor : public rclcpp::Node {
                         msg.data = asking;
                         asking_calibration_topic_pub->publish(msg);
                 }
-
-                rclcpp::TimerBase::SharedPtr parameters_timer_;
-
-                rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr speed_topic_pub;
-                double speed;
-
                 
                 rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr asking_calibration_topic_pub;
                 rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr answer_calibration_topic_sub;
